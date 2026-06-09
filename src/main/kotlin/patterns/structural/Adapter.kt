@@ -6,11 +6,14 @@ class ServicioPagoLegacy {
     }
 }
 
-class ClienteCheckoutPendiente(
+interface Objetivo {
+    fun cobrar(totalEnPesos: Double): String
+}
+
+class AdaptadorPago(
     private val servicioPagoLegacy: ServicioPagoLegacy
-) {
-    fun cobrar(totalEnPesos: Double): String {
-        // TODO: el cliente no debería depender directamente de la API legacy.
+) : Objetivo {
+    override fun cobrar(totalEnPesos: Double): String {
         val centavos = (totalEnPesos * 100).toInt()
         return servicioPagoLegacy.procesarMontoEnCentavos(centavos)
     }
