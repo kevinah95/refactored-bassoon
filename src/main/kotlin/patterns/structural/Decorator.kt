@@ -1,19 +1,26 @@
 package patterns.structural
 
-interface BebidaPendiente {
-    fun descripcionBase(): String
-    fun costoBase(): Int
+interface Componente {
+    fun descripcion(): String
+    fun costo(): Int
 }
 
-class CafeSimplePendiente : BebidaPendiente {
-    override fun descripcionBase(): String = "Café simple"
-    override fun costoBase(): Int = 25
+class CafeSimple : Componente {
+    override fun descripcion(): String = "Café simple"
+    override fun costo(): Int = 25
 }
 
-class MenuPendiente {
-    fun pedidoDelDia(): String {
-        // TODO: sustituye este enfoque por decoradores encadenables.
-        val bebida = CafeSimplePendiente()
-        return "${bebida.descripcionBase()} -> $${bebida.costoBase()}"
-    }
+abstract class Decorator(private val componente: Componente) : Componente {
+    override fun descripcion(): String = componente.descripcion()
+    override fun costo(): Int = componente.costo()
+}
+
+class DecoratorLeche(componente: Componente) : Decorator(componente) {
+    override fun descripcion(): String = "${super.descripcion()} + leche"
+    override fun costo(): Int = super.costo() + 10
+}
+
+class DecoratorCaramelo(componente: Componente) : Decorator(componente) {
+    override fun descripcion(): String = "${super.descripcion()} + caramelo"
+    override fun costo(): Int = super.costo() + 15
 }
