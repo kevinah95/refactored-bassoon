@@ -1,0 +1,342 @@
+version: '3'
+
+vars:
+  BASE: src/main/kotlin/patterns
+
+tasks:
+
+  # ── Build & Test ────────────────────────────────────────────────────────────
+
+  build:
+    desc: Compila el proyecto con Gradle
+    cmds:
+      - ./gradlew build
+
+  test:
+    desc: Ejecuta los tests con Gradle
+    cmds:
+      - ./gradlew test
+
+  # ── Creacionales ────────────────────────────────────────────────────────────
+
+  step1:
+    desc: "Paso 1 — Método fábrica (FactoryMethod.kt)"
+    vars:
+      FILE: "{{.BASE}}/creational/FactoryMethod.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Product|Producto)\b' "$FILE"           || { echo "✗ Falta: interfaz Product/Producto"; exit 1; }
+        grep -Eq '(abstract\s+fun\s+(create|crearProducto)\s*\(|fun\s+createProduct\s*\()' "$FILE" \
+                                                                       || { echo "✗ Falta: método fábrica abstracto"; exit 1; }
+        echo "✅ Paso 1 OK"
+
+  step2:
+    desc: "Paso 2 — Fábrica abstracta (AbstractFactory.kt)"
+    vars:
+      FILE: "{{.BASE}}/creational/AbstractFactory.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(AbstractFactory|FabricaAbstracta)\b' "$FILE" || { echo "✗ Falta: interfaz AbstractFactory"; exit 1; }
+        grep -Eq 'interface\s+(Product|Producto)' "$FILE"                    || { echo "✗ Falta: interfaz Product/Producto"; exit 1; }
+        echo "✅ Paso 2 OK"
+
+  step3:
+    desc: "Paso 3 — Constructor (Builder.kt)"
+    vars:
+      FILE: "{{.BASE}}/creational/Builder.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'class\s+(Builder|Constructor)\b' "$FILE" || { echo "✗ Falta: clase Builder/Constructor"; exit 1; }
+        grep -Eq 'fun\s+build\s*\(' "$FILE"                || { echo "✗ Falta: método build()"; exit 1; }
+        echo "✅ Paso 3 OK"
+
+  step4:
+    desc: "Paso 4 — Prototipo (Prototype.kt)"
+    vars:
+      FILE: "{{.BASE}}/creational/Prototype.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Prototype|Prototipo)\b' "$FILE"   || { echo "✗ Falta: interfaz Prototype/Prototipo"; exit 1; }
+        grep -Eq '(fun\s+clone\s*\(|\bcopy\s*\()' "$FILE"        || { echo "✗ Falta: método clone() o copy()"; exit 1; }
+        echo "✅ Paso 4 OK"
+
+  step5:
+    desc: "Paso 5 — Singleton (Singleton.kt)"
+    vars:
+      FILE: "{{.BASE}}/creational/Singleton.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq '(\bobject\s+[A-Z][A-Za-z0-9_]*|companion\s+object)' "$FILE" \
+                                                                       || { echo "✗ Falta: object o companion object"; exit 1; }
+        echo "✅ Paso 5 OK"
+
+  # ── Estructurales ────────────────────────────────────────────────────────────
+
+  step6:
+    desc: "Paso 6 — Adaptador (Adapter.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Adapter.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Target|Objetivo)\b' "$FILE"                             || { echo "✗ Falta: interfaz Target/Objetivo"; exit 1; }
+        grep -Eq 'class\s+[A-Za-z0-9_]+\s*:\s*(Target|Objetivo)' "$FILE"              || { echo "✗ Falta: clase que implemente Target"; exit 1; }
+        grep -Eq '(private\s+val|ServicioPagoLegacy|Adaptado)' "$FILE"                 || { echo "✗ Falta: referencia privada al adaptado"; exit 1; }
+        echo "✅ Paso 6 OK"
+
+  step7:
+    desc: "Paso 7 — Puente (Bridge.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Bridge.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Implementation|Implementacion)\b' "$FILE" || { echo "✗ Falta: interfaz Implementation/Implementacion"; exit 1; }
+        echo "✅ Paso 7 OK"
+
+  step8:
+    desc: "Paso 8 — Compuesto (Composite.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Composite.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Component|Componente)\b' "$FILE" || { echo "✗ Falta: interfaz Component/Componente"; exit 1; }
+        grep -Eq 'add\s*\(' "$FILE"                             || { echo "✗ Falta: método add()"; exit 1; }
+        echo "✅ Paso 8 OK"
+
+  step9:
+    desc: "Paso 9 — Decorador (Decorator.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Decorator.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Component|Componente)\b' "$FILE"                              || { echo "✗ Falta: interfaz Component/Componente"; exit 1; }
+        grep -Eq 'class\s+[A-Za-z0-9_]*Decorator[A-Za-z0-9_]*|class\s+Decorador' "$FILE"   || { echo "✗ Falta: clase Decorator/Decorador"; exit 1; }
+        grep -Eq 'private\s+val\s+[a-zA-Z0-9_]+:\s*(Component|Componente)' "$FILE"         || { echo "✗ Falta: referencia privada al componente"; exit 1; }
+        echo "✅ Paso 9 OK"
+
+  step10:
+    desc: "Paso 10 — Fachada (Facade.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Facade.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'class\s+(Facade|Fachada)\b' "$FILE" || { echo "✗ Falta: clase Facade/Fachada"; exit 1; }
+        echo "✅ Paso 10 OK"
+
+  step11:
+    desc: "Paso 11 — Peso mosca (Flyweight.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Flyweight.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'class\s+(FlyweightFactory|FabricaPesoMosca)\b' "$FILE" || { echo "✗ Falta: clase FlyweightFactory/FabricaPesoMosca"; exit 1; }
+        grep -Eq '(map|cache)' "$FILE"                                    || { echo "✗ Falta: caché/map para flyweights"; exit 1; }
+        echo "✅ Paso 11 OK"
+
+  step12:
+    desc: "Paso 12 — Proxy (Proxy.kt)"
+    vars:
+      FILE: "{{.BASE}}/structural/Proxy.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Subject|Sujeto)\b' "$FILE"                                                         || { echo "✗ Falta: interfaz Subject/Sujeto"; exit 1; }
+        grep -Eq 'class\s+Proxy\b|class\s+[A-Za-z0-9_]*Proxy[A-Za-z0-9_]*\s*:\s*(Subject|Sujeto)' "$FILE"       || { echo "✗ Falta: clase Proxy que implemente Subject"; exit 1; }
+        echo "✅ Paso 12 OK"
+
+  # ── De comportamiento ───────────────────────────────────────────────────────
+
+  step13:
+    desc: "Paso 13 — Cadena de responsabilidad (ChainOfResponsibility.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/ChainOfResponsibility.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'abstract\s+fun\s+handle\s*\(' "$FILE" || { echo "✗ Falta: abstract fun handle()"; exit 1; }
+        grep -Eq '\bnext\b' "$FILE"                      || { echo "✗ Falta: referencia 'next' al siguiente eslabón"; exit 1; }
+        echo "✅ Paso 13 OK"
+
+  step14:
+    desc: "Paso 14 — Comando (Command.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Command.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Command|Comando)\b' "$FILE" || { echo "✗ Falta: interfaz Command/Comando"; exit 1; }
+        grep -Eq 'fun\s+execute\s*\(' "$FILE"              || { echo "✗ Falta: método execute()"; exit 1; }
+        echo "✅ Paso 14 OK"
+
+  step15:
+    desc: "Paso 15 — Iterador (Iterator.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Iterator.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'fun\s+hasNext\s*\(' "$FILE" || { echo "✗ Falta: método hasNext()"; exit 1; }
+        grep -Eq 'fun\s+next\s*\(' "$FILE"    || { echo "✗ Falta: método next()"; exit 1; }
+        echo "✅ Paso 15 OK"
+
+  step16:
+    desc: "Paso 16 — Mediador (Mediator.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Mediator.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Mediator|Mediador)\b' "$FILE"        || { echo "✗ Falta: interfaz Mediator/Mediador"; exit 1; }
+        grep -Eq 'fun\s+(notify|notificar)\s*\(' "$FILE"             || { echo "✗ Falta: método notify/notificar()"; exit 1; }
+        echo "✅ Paso 16 OK"
+
+  step17:
+    desc: "Paso 17 — Memento (Memento.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Memento.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'class\s+Memento\b' "$FILE"               || { echo "✗ Falta: clase Memento"; exit 1; }
+        grep -Eq 'fun\s+(save|guardar)\s*\(' "$FILE"        || { echo "✗ Falta: método save/guardar()"; exit 1; }
+        echo "✅ Paso 17 OK"
+
+  step18:
+    desc: "Paso 18 — Observador (Observer.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Observer.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Observer|Observador)\b' "$FILE"   || { echo "✗ Falta: interfaz Observer/Observador"; exit 1; }
+        grep -Eq 'fun\s+(update|actualizar)\s*\(' "$FILE"         || { echo "✗ Falta: método update/actualizar()"; exit 1; }
+        echo "✅ Paso 18 OK"
+
+  step19:
+    desc: "Paso 19 — Estado (State.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/State.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(State|Estado)\b' "$FILE"        || { echo "✗ Falta: interfaz State/Estado"; exit 1; }
+        grep -Eq 'fun\s+(handle|manejar)\s*\(' "$FILE"          || { echo "✗ Falta: método handle/manejar()"; exit 1; }
+        echo "✅ Paso 19 OK"
+
+  step20:
+    desc: "Paso 20 — Estrategia (Strategy.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Strategy.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Strategy|Estrategia)\b' "$FILE"   || { echo "✗ Falta: interfaz Strategy/Estrategia"; exit 1; }
+        grep -Eq 'fun\s+(execute|ejecutar)\s*\(' "$FILE"          || { echo "✗ Falta: método execute/ejecutar()"; exit 1; }
+        echo "✅ Paso 20 OK"
+
+  step21:
+    desc: "Paso 21 — Método plantilla (TemplateMethod.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/TemplateMethod.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'abstract\s+class' "$FILE"                                         || { echo "✗ Falta: clase abstracta"; exit 1; }
+        grep -Eq 'abstract\s+fun' "$FILE"                                           || { echo "✗ Falta: métodos abstractos"; exit 1; }
+        grep -Eq 'fun\s+(templateMethod|metodoPlantilla)\s*\(' "$FILE"              || { echo "✗ Falta: método plantilla templateMethod/metodoPlantilla()"; exit 1; }
+        echo "✅ Paso 21 OK"
+
+  step22:
+    desc: "Paso 22 — Visitante (Visitor.kt)"
+    vars:
+      FILE: "{{.BASE}}/behavioral/Visitor.kt"
+    cmds:
+      - |
+        FILE="{{.FILE}}"
+        echo "▶ Verificando $FILE ..."
+        [ -f "$FILE" ] || { echo "✗ Archivo no encontrado."; exit 1; }
+        grep -Eq 'interface\s+(Visitor|Visitante)\b' "$FILE"   || { echo "✗ Falta: interfaz Visitor/Visitante"; exit 1; }
+        grep -Eq 'fun\s+(visit|visitar)\s*\(' "$FILE"           || { echo "✗ Falta: método visit/visitar()"; exit 1; }
+        echo "✅ Paso 22 OK"
+
+  # ── Verificar todos los pasos ────────────────────────────────────────────────
+
+  check-all:
+    desc: Verifica todos los pasos (1–22)
+    cmds:
+      - task: step1
+      - task: step2
+      - task: step3
+      - task: step4
+      - task: step5
+      - task: step6
+      - task: step7
+      - task: step8
+      - task: step9
+      - task: step10
+      - task: step11
+      - task: step12
+      - task: step13
+      - task: step14
+      - task: step15
+      - task: step16
+      - task: step17
+      - task: step18
+      - task: step19
+      - task: step20
+      - task: step21
+      - task: step22
+      - cmd: echo ""
+      - cmd: echo "🎉 ¡Todos los pasos verificados!"
