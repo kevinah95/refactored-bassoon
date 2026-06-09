@@ -1,6 +1,6 @@
 package patterns.creational
 
-class RegistroConfiguracionPendiente {
+object RegistroConfiguracion {
     private var entorno: String = "dev"
 
     fun leerEntorno(): String = entorno
@@ -8,9 +8,4 @@ class RegistroConfiguracionPendiente {
     fun cambiarEntorno(nuevoEntorno: String) {
         entorno = nuevoEntorno
     }
-}
-
-fun crearDosConfiguracionesTemporales(): Pair<RegistroConfiguracionPendiente, RegistroConfiguracionPendiente> {
-    // TODO: reemplaza estas dos instancias por un singleton real.
-    return RegistroConfiguracionPendiente() to RegistroConfiguracionPendiente()
 }

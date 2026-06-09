@@ -7,14 +7,16 @@ data class Computadora(
     val gpu: String?
 )
 
-class ConfiguracionPendiente {
-    var cpu: String = "pendiente"
-    var memoriaGb: Int = 0
-    var almacenamientoGb: Int = 0
-    var gpu: String? = null
+class Builder {
+    private var cpu: String = "genérico"
+    private var memoriaGb: Int = 4
+    private var almacenamientoGb: Int = 256
+    private var gpu: String? = null
 
-    // TODO: reemplaza esta clase por un Builder real con métodos encadenables.
-    fun crearTemporal(): Computadora {
-        return Computadora(cpu, memoriaGb, almacenamientoGb, gpu)
-    }
+    fun cpu(cpu: String): Builder = apply { this.cpu = cpu }
+    fun memoriaGb(gb: Int): Builder = apply { this.memoriaGb = gb }
+    fun almacenamientoGb(gb: Int): Builder = apply { this.almacenamientoGb = gb }
+    fun gpu(gpu: String): Builder = apply { this.gpu = gpu }
+
+    fun build(): Computadora = Computadora(cpu, memoriaGb, almacenamientoGb, gpu)
 }
