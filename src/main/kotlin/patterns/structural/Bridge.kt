@@ -1,14 +1,25 @@
 package patterns.structural
 
-class ReportePendiente {
-    fun exportarComoTexto(): String {
-        // TODO: aquí debería existir una separación entre abstracción e implementación.
-        return "Reporte temporal"
-    }
+interface Implementacion {
+    fun exportar(datos: String): String
 }
 
-class ReporteDetalladoPendiente {
-    fun exportarDetallado(): String {
-        return "Reporte detallado temporal"
-    }
+class ImplementacionTexto : Implementacion {
+    override fun exportar(datos: String): String = "TXT: $datos"
+}
+
+class ImplementacionHtml : Implementacion {
+    override fun exportar(datos: String): String = "<html>$datos</html>"
+}
+
+abstract class Reporte(protected val implementacion: Implementacion) {
+    abstract fun generar(): String
+}
+
+class ReporteSimple(implementacion: Implementacion) : Reporte(implementacion) {
+    override fun generar(): String = implementacion.exportar("Reporte simple")
+}
+
+class ReporteDetallado(implementacion: Implementacion) : Reporte(implementacion) {
+    override fun generar(): String = implementacion.exportar("Reporte detallado con todos los datos")
 }

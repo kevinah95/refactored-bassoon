@@ -1,20 +1,27 @@
 package patterns.structural
 
-interface NodoPendiente {
+interface Componente {
     fun renderizar(nivel: Int = 0): String
 }
 
-class ArchivoPendiente(
+class Archivo(
     private val nombre: String
-) : NodoPendiente {
+) : Componente {
     override fun renderizar(nivel: Int): String = "${"  ".repeat(nivel)}- $nombre"
 }
 
-class CarpetaPendiente(
+class Carpeta(
     private val nombre: String
-) : NodoPendiente {
+) : Componente {
+    private val hijos = mutableListOf<Componente>()
+
+    fun add(componente: Componente) {
+        hijos += componente
+    }
+
     override fun renderizar(nivel: Int): String {
-        // TODO: convierte esta carpeta en un Composite real con hijos y add(...).
-        return "${"  ".repeat(nivel)}+ $nombre"
+        val lineas = mutableListOf("${"  ".repeat(nivel)}+ $nombre")
+        hijos.forEach { lineas += it.renderizar(nivel + 1) }
+        return lineas.joinToString("\n")
     }
 }
